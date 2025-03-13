@@ -14,9 +14,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.set('view engine', 'jade');
 
-app.use('/uploads',express.static('uploads'))
+app.use('/uploads', express.static('uploads'));
+app.use('/api', require('./routes'));
 
-app.use('/api',require('./routes'))
 
 if(!fs.existsSync('./uploads')){
   fs.mkdirSync('uploads')
