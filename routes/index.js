@@ -1,6 +1,7 @@
 const express =require('express')
 const router=express.Router()
 const multer =require('multer');
+const UserController = require('../controllers/user-controller');
 // const { UserController } = require('../controllers');
 
 const uploadDestination='uploads'
@@ -12,27 +13,12 @@ const storage = multer.diskStorage({
   }
 })
 
-const uploads=multer({storage:storage})
-
-router.post('/register',(req,res)=>{
-  res.send("register")
-})
-
-router.post('/login',async (req,res)=>{
-  res.send("login")
-})
-
-router.get('/current',async()=>(req,res)=>{
-  res.send('current')
-})
-
-router.get('/users/:id',async()=>(req,res)=>{
-  res.send('getUserById')
-})
-
-router.put('/users/:id',async()=>(req,res)=>{
-  res.send('updateUser')
-})
-
+const upload = multer({ storage: storage });
+// Роуты User
+router.post("/register", UserController.register);
+router.post("/login", UserController.login);
+router.get("/current",  UserController.current);
+router.get("/users/:id", UserController.getUserById);
+router.put("/users/:id",  UserController.updateUser)
 
 module.exports=router

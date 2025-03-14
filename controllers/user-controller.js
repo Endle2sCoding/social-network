@@ -1,22 +1,65 @@
+const { prisma } = require("../prisma/prisma-client");
+const bcrypt = require("bcrypt");
+const fs  = require("fs");
+const Jdenticon = require("jdenticon");
+const path = require("path");
+
 const UserController = {
-  register: async (req,res)=>{
-      res.send('register')
+  register: async (req, res) => {
+    const { email, password, name } = req.body;
 
-  }, 
-  login: async ()=>(req,res)=>{
-      res.send('login')
+    // Проверяем поля на существование
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: "Все поля обязательны" });
+    }
 
-  },
+    try {
+      // Проверяем, существует ли пользователь с таким emai
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ error: "Пользователь уже существует" });
+      }
 
-  current: async()=>(req,res)=>{
-    res.send('current')
-  },
-  getUserById: async()=>(req,res)=>{
-    res.send('getUserById')
-  },
-  updateUser: async()=>(req,res)=>{
-    res.send('updateUser')
-  },
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const png = Jdenticon.toPng(name, 200);
+      const avatarName = `${name}_${Date.now()}.png`;
+      const avatarPath = path.join(__dirname, '/../uploads', avatarName);
+      fs.writeFileSync(avatarPath, png);
   
-}
-module.exports=UserController
+      const user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          name,
+          avatarUrl: `/uploads/${avatarName}`,
+        },
+      });
+
+      res.json(user);
+    } catch (error) {
+      console.error("Error in register:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  login: async (req, res) => {
+    const { email, password } = req.body;
+
+    res.send("login");
+  },
+
+  getUserById: async (req, res) => {
+    res.send("getUserById");
+  },
+
+  updateUser: async (req, res) => {
+    res.send("updateUser");
+  },
+
+  current: async (req, res) => {
+    res.send("current");
+  },
+};
+
+module.exports = UserController;
