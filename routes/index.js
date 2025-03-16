@@ -18,7 +18,7 @@ const upload = multer({ storage: storage });
 // Роуты User
 router.post("/register", UserController.register);
 router.post("/login", UserController.login);
+router.get("/users/:id", authenticateToken, UserController.getUserById);
 router.get("/current", authenticateToken, UserController.current);
-router.get("/users/:id", UserController.getUserById);
-router.put("/users/:id", UserController.updateUser);
+router.put("/users/:id", authenticateToken, UserController.updateUser);
 module.exports = router;
