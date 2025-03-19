@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "prisma:format": "npx prisma format",
     "prisma:push": "npx prisma db push",
-    "prisma:show": "npx prisma studio",
+    "prisma:studio": "prisma studio",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {

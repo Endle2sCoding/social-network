@@ -25,9 +25,9 @@ router.put("/users/:id", authenticateToken, UserController.updateUser);
 
 // Posts routes
 router.post('/posts', authenticateToken, PostController.createPost);
-router.post('/posts', authenticateToken, PostController.getAllPosts);
-router.post('/posts/:id', authenticateToken, PostController.getPostById);
-router.post('/posts/:id', authenticateToken, PostController.deletePost);
+router.get('/posts', authenticateToken, PostController.getAllPosts);
+router.get('/posts/:id', authenticateToken, PostController.getPostById);
+router.delete('/posts/:id', authenticateToken, PostController.deletePost);
 
 
 
